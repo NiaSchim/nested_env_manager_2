@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutorial</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    table {
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      border: 1px solid black;
+      padding: 5px;
+    }
+    .code {
+      background-color: black;
+      color: lime;
+      white-space: pre;
+    }
+    .text {
+      background-color: white;
+      color: black;
+    }
+  </style>
+</head>
+<body>
+  <table>
+    <tr>
+      <td class="text">
+        <h2>Introduction</h2>
+        <p>This tutorial will guide you through using the second iteration of NestedEnvManager to create a main virtual environment with 3 sub-environments. We will then create and execute different Python scripts in these virtual environments to demonstrate the functionality of the NestedEnvManager.</p>
+
+        <h2>Purpose of the Exercise</h2>
+        <p>The purpose of this exercise is to show how to create and manage multiple Python virtual environments using the NestedEnvManager module. This allows you to maintain isolated environments for different parts of your project, making it easier to manage dependencies and avoid conflicts.</p>
+      </td>
+    </tr>
+    <tr>
+      <td class="code">
+        # Step 1: Install and build the NestedEnvManager module using pip
+        # Clone the repository from GitHub and navigate to the project folder
+        git clone https://github.com/niaschim/nested_env_manager_2.git
+        cd nested_env_manager
+
+        # Install the module with pip
+        pip install .
+      </td>
+    </tr>
+    <tr>
+      <td class="text">
+        <h2>Program A, B, and C</h2>
+        <p>Create the following Python scripts:</p>
+      </td>
+    </tr>
+    <tr>
+      <td class="code">
+        # program_a.py
+        def program_a(env_name):
+          file_name = f"{env_name}-temp"
+          try:
+            with open(file_name, "r") as f:
+              num = int(f.read())
+          except FileNotFoundError:
+            num = 1
+          else:
+            num = 1 / num
+
+          with open(file_name, "w") as f:
+            f.write(str(num))
+      </td>
+    </tr>
+    <tr>
+      <td class="code">
+        # program_b.py
+        def program_b(env_name):
+          file_name = f"{env_name}-temp"
+          try:
+            with open(file_name, "r") as f:
+              num = int(f.read())
+          except FileNotFoundError:
+            num = 2
+          else:
+            num = num * num
+
+          with open(file_name, "w") as f:
+            f.write(str(num))
+      </td>
+    </tr>
+    <tr>
+      <td class="code">
+        # program_c.py
+        def program_c(env_name):
+          file_name = f"{env_name}-temp"
+          try:
+            with open(file_name, "r") as f:
+              num = int(f.read())
+          except FileNotFoundError:
+            num = 3
+         
+         else:
+            num = num + 3
+
+          with open(file_name, "w") as f:
+            f.write(str(num))
+      </td>
+    </tr>
+    <tr>
+      <td class="text">
+        <h2>Main Program</h2>
+        <p>Create the main Python script to create the main virtual environment and its sub-environments, and execute the specified programs in each sub-environment:</p>
+      </td>
+    </tr>
+    <tr>
+      <td class="code">
+        # main_program.py
+        from nested_env_manager import NestedEnvManager
+        import program_a
+        import program_b
+        import program_c
+
+        nem = NestedEnvManager()
+
+        main_env = nem.create_main_env()
+
+        sub_env_1 = nem.create_sub_env(main_env)
+        sub_env_2 = nem.create_sub_env(main_env)
+        sub_env_3 = nem.create_sub_env(main_env)
+
+        nem.execute_in_sub_env(sub_env_1, program_a.program_a)
+        nem.execute_in_sub_env(sub_env_3, program_a.program_a)
+
+        nem.execute_in_sub_env(sub_env_3, program_b.program_b)
+        nem.execute_in_sub_env(sub_env_2, program_b.program_b)
+
+        nem.execute_in_sub_env(sub_env_1, program_c.program_c)
+        nem.execute_in_sub_env(sub_env_2, program_c.program_c)
+
+        def print_files_in_env(env):
+          import os
+          for root, _, files in os.walk(env.path):
+            for file in files:
+              if file.endswith('-temp'):
+                with open(os.path.join(root, file), 'r') as f:
+                  print(f"{file}: {f.read()}")
+
+        nem.execute_in_main_env(main_env, print_files_in_env)
+    </tr>
+  </table>
+  <table>
+    <tr>
+      <td class="text">
+        <h2>Takeaways from the Tutorial and Future Possibilities</h2>
+        <p>In this tutorial, you have learned how to use the NestedEnvManager module to create, manage, and execute programs in multiple Python virtual environments. The module provides an efficient way to maintain isolated environments for different parts of your project, which can help you manage dependencies and avoid conflicts.</p>
+
+        <p>With the knowledge gained from this tutorial, you can explore various applications of NestedEnvManager in real-world projects. For instance, you can use the module to create separate environments for different stages of a data processing pipeline, ensuring that each stage has its own set of required dependencies. You can also use NestedEnvManager to create isolated environments for running experiments with different versions of a package, making it easier to compare results and track changes.</p>
+
+        <p>As you continue to work with NestedEnvManager, you may discover additional ways to customize and optimize your virtual environments, further expanding the module's capabilities and potential use cases.</p>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
